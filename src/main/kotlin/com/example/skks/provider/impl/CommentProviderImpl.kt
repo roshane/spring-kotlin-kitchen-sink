@@ -29,4 +29,12 @@ class CommentProviderImpl(private val client: JsonPlaceholderClient) : CommentPr
         logger.info("getAllByPostId({})", postId)
         return cache[postId] ?: emptyList()
     }
+
+    override fun getAllByPosts(postIdList: List<Int>): List<Comment> {
+        val postIdSet = postIdList.toSet()
+        return cache
+            .values
+            .flatten()
+            .filter { postIdSet.contains(it.postId) }
+    }
 }
