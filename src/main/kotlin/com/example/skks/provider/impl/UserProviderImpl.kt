@@ -21,7 +21,7 @@ class UserProviderImpl(private val client: JsonPlaceholderClient) : UserProvider
     }
 
     override fun getAll(): List<User> {
-        logger.info("getAll")
+        logger.info("get all users")
         return cache
             .values
             .toList()
@@ -29,7 +29,7 @@ class UserProviderImpl(private val client: JsonPlaceholderClient) : UserProvider
     }
 
     override fun getById(userId: Int): User? {
-        logger.info("getById({})", userId)
+        logger.info("get user by userID: {}", userId)
         return cache[userId]?.get(0)
     }
 }

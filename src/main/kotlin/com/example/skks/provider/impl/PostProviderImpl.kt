@@ -21,16 +21,24 @@ class PostProviderImpl(private val client: JsonPlaceholderClient) : PostProvider
     }
 
     override fun getAll(): List<Post> {
-        logger.info("getAll")
+        logger.info("get all posts")
         return cache
             .values
             .flatten()
     }
 
-
     override fun getAllByUser(userId: Int): List<Post> {
-        logger.info("getAllByUser({})", userId)
+        logger.info("get all posts by userID: {}", userId)
         return cache[userId] ?: emptyList()
     }
 
+    override fun getAllByUserIds(userIdList: List<Int>): Map<Int, List<Post>> {
+        logger.info("get all posts by userIdList: {}", userIdList)
+        val postsByUserId = cache
+            .values
+            .flatten()
+            .groupBy { it.userId }
+        return userIdList
+            .associateWith { postsByUserId[it].orEmpty() }
+    }
 }

@@ -21,16 +21,17 @@ class CommentProviderImpl(private val client: JsonPlaceholderClient) : CommentPr
     }
 
     override fun getAll(): List<Comment> {
-        logger.info("getAll")
+        logger.info("get all comments")
         return cache.values.flatten()
     }
 
     override fun getAllByPostId(postId: Int): List<Comment> {
-        logger.info("getAllByPostId({})", postId)
+        logger.info("get all comments by postID: {}", postId)
         return cache[postId] ?: emptyList()
     }
 
     override fun getAllByPosts(postIdList: List<Int>): List<Comment> {
+        logger.info("get all comment by postIdList: {}", postIdList)
         val postIdSet = postIdList.toSet()
         return cache
             .values
