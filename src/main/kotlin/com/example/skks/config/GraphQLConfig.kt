@@ -6,11 +6,17 @@ import com.example.skks.HttpModels.User
 import com.example.skks.provider.CommentProvider
 import com.example.skks.provider.PostProvider
 import com.example.skks.provider.UserProvider
+import graphql.ErrorClassification
+import graphql.GraphQLError
+import graphql.language.SourceLocation
 import graphql.schema.DataFetcher
 import org.dataloader.BatchLoaderEnvironment
+import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.graphql.execution.BatchLoaderRegistry
+import org.springframework.graphql.execution.DataFetcherExceptionResolver
+import org.springframework.graphql.execution.DataFetcherExceptionResolverAdapter
 import org.springframework.graphql.execution.RuntimeWiringConfigurer
 import reactor.core.publisher.Mono
 
@@ -55,7 +61,7 @@ class GraphQLConfig(
                     postIds: Set<Int>,
                     _: BatchLoaderEnvironment,
                 ->
-                Mono.create { sink ->
+                Mono.create<Map<Int, List<*>>> { sink ->
                     val commentsByPostId = commentProvider
                         .getAllByPosts(postIds.toList())
                         .groupBy { it.postId }
@@ -64,7 +70,8 @@ class GraphQLConfig(
                         .associateWith { commentsByPostId[it].orEmpty() }
                         .toMutableMap()
                     sink.success(resultMap)
-                }
+//                    sink.error(java.lang.RuntimeException("error fetching comments for post id(s): $postIds"))
+                }//.subscribeOn(Schedulers.boundedElastic())
             }
 
         batchLoaderRegistry
@@ -109,4 +116,29 @@ class GraphQLConfig(
 
         }
     }
+
+    @Bean
+    fun dataFetcherExceptionResolver(): DataFetcherExceptionResolver = DataFetcherExceptionResolverAdapter.from {
+            throwable,
+            env,
+        ->
+        object : GraphQLError {
+            private val logger = LoggerFactory.getLogger(GraphQLError::class.java)
+            override fun getMessage(): String = "hello I have no idea what happened ${throwable.message}"
+
+
+            override fun getLocations(): MutableList<SourceLocation> {
+                logger.info("Error env: {}", env)
+                return mutableListOf()
+            }
+
+            override fun getErrorType(): ErrorClassification = object : ErrorClassification {
+                override fun toSpecification(error: GraphQLError?): Any {
+                    return super.toSpecification(error)
+                }
+            }
+        }
+    }
+
+
 }
