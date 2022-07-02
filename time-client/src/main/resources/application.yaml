@@ -1,0 +1,18 @@
+server:
+  port: 7000
+
+feign:
+  circuitbreaker:
+    enabled: true
+
+logging:
+  level:
+    com:
+      example:
+        skks:
+          time:
+            client: DEBUG
+
+servers:
+  time-server:
+    name: TIME-SERVER
