@@ -23,13 +23,14 @@ import java.util.concurrent.TimeUnit.MILLISECONDS
 @EnableFeignClients
 @Configuration
 class TimeClientBoot {
-
     @Bean
     fun feignLoggerLevel(): Logger.Level = Logger.Level.BASIC
 }
 
 fun main(args: Array<String>) {
-    runApplication<TimeClientBoot>(*args)
+    val context = runApplication<TimeClientBoot>(*args)
+    val friends = context.environment.getProperty("friend.names")
+    println(friends)
 }
 
 
