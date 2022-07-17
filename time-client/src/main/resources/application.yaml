@@ -16,6 +16,3 @@ logging:
 servers:
   time-server:
     name: TIME-SERVER
-
-friend:
-  names: nimal,sunil,amal

@@ -28,9 +28,7 @@ class TimeClientBoot {
 }
 
 fun main(args: Array<String>) {
-    val context = runApplication<TimeClientBoot>(*args)
-    val friends = context.environment.getProperty("friend.names")
-    println(friends)
+    runApplication<TimeClientBoot>(*args)
 }
 
 
