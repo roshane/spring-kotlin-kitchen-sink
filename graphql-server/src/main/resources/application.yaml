@@ -1,0 +1,11 @@
+spring:
+  graphql:
+    graphiql:
+      enabled: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh
+

@@ -23,7 +23,6 @@ import java.util.concurrent.TimeUnit.MILLISECONDS
 @EnableFeignClients
 @Configuration
 class TimeClientBoot {
-
     @Bean
     fun feignLoggerLevel(): Logger.Level = Logger.Level.BASIC
 }

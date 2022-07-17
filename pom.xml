@@ -13,6 +13,8 @@
         <module>eureka-server</module>
         <module>time-server</module>
         <module>time-client</module>
+        <module>dynamic-gql</module>
+        <module>config-server</module>
     </modules>
 
     <description>spring kotlin kitchen sink</description>
@@ -23,6 +25,7 @@
         <java.version>11</java.version>
         <kotlin.version>1.6.21</kotlin.version>
         <spring-cloud.version>2021.0.3</spring-cloud.version>
+        <spring.cloud-version>Hoxton.SR8</spring.cloud-version>
     </properties>
 
     <dependencyManagement>
@@ -41,7 +44,23 @@
                 <scope>import</scope>
                 <type>pom</type>
             </dependency>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring.cloud-version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.netflix.graphql.dgs</groupId>
+                <artifactId>graphql-dgs-platform-dependencies</artifactId>
+                <!-- The DGS BOM/platform dependency. This is the only place you set version of DGS -->
+                <version>4.9.16</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
         </dependencies>
+
     </dependencyManagement>
 
 
