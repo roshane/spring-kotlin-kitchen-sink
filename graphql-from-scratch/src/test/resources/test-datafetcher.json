@@ -1,0 +1,16 @@
+{
+  "dataFetchers": [
+    {
+      "id": "echo-data-fetcher",
+      "type": "Query",
+      "fieldName": "echo",
+      "arguments": [
+        {
+          "name": "name",
+          "kType": "kotlin.String",
+          "required": "false"
+        }
+      ]
+    }
+  ]
+}

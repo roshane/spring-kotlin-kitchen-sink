@@ -6,5 +6,5 @@ class GqlReloadSchemaIndicator(
     private val schemaStatusProvider: SchemaStatusProvider
 ) : DefaultDgsQueryExecutor.ReloadSchemaIndicator {
 
-    override fun reloadSchema(): Boolean = schemaStatusProvider.shouldRefresh()
+    override fun reloadSchema(): Boolean = schemaStatusProvider.hasChanges()
 }
