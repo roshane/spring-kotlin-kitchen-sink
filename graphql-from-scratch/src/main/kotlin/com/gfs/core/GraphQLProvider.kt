@@ -1,6 +1,8 @@
 package com.gfs.core
 
 import com.gfs.datafetcher.DelegatedDataFetcher
+import graphql.ExecutionInput
+import graphql.ExecutionResult
 import graphql.GraphQL
 import graphql.language.FieldDefinition
 import graphql.schema.GraphQLSchema
@@ -18,17 +20,17 @@ class GraphQLProvider(
     private val schemaLocations: List<String>,
     private val delegatedDataFetcher: DelegatedDataFetcher<*>
 ) : RefreshableGraphQLProvider {
-    private val resolver = PathMatchingResourcePatternResolver(Thread.currentThread().contextClassLoader)
-    private val schemaParser = SchemaParser()
-    private val schemaGenerator = SchemaGenerator()
-    private val graphQLRef: AtomicReference<Optional<GraphQL>> = AtomicReference(Optional.empty())
 
     companion object {
         private val logger = LoggerFactory.getLogger(GraphQLProvider::class.java)
+        private val resolver = PathMatchingResourcePatternResolver(Thread.currentThread().contextClassLoader)
+        private val schemaParser = SchemaParser()
+        private val schemaGenerator = SchemaGenerator()
+        private val graphQLRef: AtomicReference<Optional<GraphQL>> = AtomicReference(Optional.empty())
     }
 
-    override fun <T> execute(query: String): T = graphQLRef.get()
-        .map { it.execute(query).getData<T>() }
+    override fun execute(input: ExecutionInput): ExecutionResult = graphQLRef.get()
+        .map { it.execute(input.query) }
         .orElseThrow { RuntimeException("GraphQL Not Initialized") }
 
     @PostConstruct

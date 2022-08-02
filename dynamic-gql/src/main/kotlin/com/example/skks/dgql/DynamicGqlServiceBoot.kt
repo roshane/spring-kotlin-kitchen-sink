@@ -4,9 +4,7 @@ import com.example.skks.dgql.core.DefaultSchemaStatusProvider
 import com.example.skks.dgql.core.SchemaStatusProvider
 import com.netflix.graphql.dgs.DgsComponent
 import com.netflix.graphql.dgs.DgsQuery
-import com.netflix.graphql.dgs.autoconfig.DgsAutoConfiguration
 import com.netflix.graphql.dgs.internal.DefaultDgsQueryExecutor
-import com.netflix.graphql.dgs.webmvc.autoconfigure.DgsWebMvcAutoConfiguration
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
@@ -22,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.client.RestTemplate
 
 @SpringBootApplication(
-    exclude = [DgsAutoConfiguration::class, DgsWebMvcAutoConfiguration::class]
+//    exclude = [DgsAutoConfiguration::class, DgsWebMvcAutoConfiguration::class]
 )
 class DynamicGqlServiceBoot
 
@@ -41,10 +39,8 @@ class MessageController(private val schemaStatusProvider: SchemaStatusProvider) 
     fun index(): String = greeting
 
     @GetMapping("/refresh-schema")
-    fun shouldRefresh(): String = schemaStatusProvider.shouldRefresh().toString()
+    fun shouldRefresh(): String = schemaStatusProvider.hasChanges().toString()
 
-    @PostMapping("/refresh-schema")
-    fun schemaUpdated() = schemaStatusProvider.notifyRefreshed()
 }
 
 @Configuration
@@ -65,7 +61,7 @@ class AppConfig {
     @Bean
     fun reloadSchemaIndicator(schemaStatusProvider: SchemaStatusProvider): DefaultDgsQueryExecutor.ReloadSchemaIndicator =
         DefaultDgsQueryExecutor.ReloadSchemaIndicator {
-            schemaStatusProvider.shouldRefresh()
+            schemaStatusProvider.hasChanges()
         }
 
     @Bean

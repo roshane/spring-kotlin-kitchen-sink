@@ -75,9 +75,9 @@ class DefaultSchemaStatusProvider(
         }
     }
 
-    override fun shouldRefresh() = shouldRefreshSchema.get()
+    override fun hasChanges() = shouldRefreshSchema.get()
 
-    override fun notifyRefreshed() {
+    private fun notifyRefreshed() {
         val currentChecksumMap = getCurrentSchemaFileChecksum(schemaResourcesProvider)
         schemaFileChecksum.putAll(currentChecksumMap)
         shouldRefreshSchema.set(false)

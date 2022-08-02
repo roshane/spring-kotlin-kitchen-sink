@@ -5,6 +5,8 @@ import com.gfs.datafetcher.DelegatedDataFetcher
 import com.gfs.handler.DataFetcherHandler
 import com.gfs.handler.GraphQLHandler
 import com.gfs.repository.DataFetcherRepository
+import org.dataloader.DataLoaderRegistry
+import org.springframework.boot.ApplicationRunner
 import org.springframework.boot.web.client.RestTemplateBuilder
 import org.springframework.context.support.beans
 import org.springframework.web.client.RestTemplate
@@ -29,6 +31,10 @@ object AppContextConfig {
         bean<RestTemplate>() {
             val builder = ref<RestTemplateBuilder>()
             builder.build()
+        }
+        bean<DataLoaderRegistry>()
+        bean<ApplicationRunner> {
+            DataLoaderBootstrap(ref(), ref(), ref())
         }
     }
 }

@@ -1,7 +1,7 @@
 package com.gfs.handler
 
 import com.gfs.datafetcher.DataFetcherType
-import com.gfs.datafetcher.DataFetcherWithMetaData
+import com.gfs.datafetcher.ApplicationDataFetcher
 import com.gfs.http.CreateDataFetcherRequest
 import com.gfs.http.Http
 import com.gfs.http.Http.json
@@ -55,12 +55,12 @@ class DataFetcherHandler(
 
     fun findAll(req: ServerRequest): ServerResponse = ok()
         .json()
-        .body(dataFetcherRepository.allMetaData())
+        .body(dataFetcherRepository.findAll())
 
     private fun createDataFetcher(req: Http.CreateSimpleDataFetcherRequest) {
         LOGGER.info("new data-fetcher create request: {}", req)
 
-        val dataFetcher = object : DataFetcherWithMetaData<String> {
+        val dataFetcher = object : ApplicationDataFetcher<String> {
 
             override fun metaData(): CreateDataFetcherRequest = req
 
@@ -76,12 +76,13 @@ class DataFetcherHandler(
     private fun createDataFetcher(req: Http.CreateHttpDataFetcherRequest) {
         LOGGER.info("new data-fetcher create request: {}", req)
 
-        val dataFetcher = object : DataFetcherWithMetaData<Any> {
+        val dataFetcher = object : ApplicationDataFetcher<Any> {
             override fun metaData(): CreateDataFetcherRequest = req
 
             override fun get(environment: DataFetchingEnvironment?): Any {
+                //resolve http parameters body / query / path
                 val response = restTemplate.getForEntity(req.resourceUrl, Any::class.java)
-                LOGGER.info("fetch result: {}", response)
+                LOGGER.info("fetch result {} : {}", req.resourceUrl, response.statusCode)
                 return response.body ?: throw RuntimeException("Unable to fetch data")
             }
 

@@ -16,14 +16,15 @@ object Http {
     data class CreateHttpDataFetcherRequest(
         val gqlField: String,
         val resourceUrl: String,
-        val requestBodyParameters: Map<String, String> = emptyMap(),
-        val requestQueryParameters: Map<String, String> = emptyMap(),
+        val requestBodyParameters: Map<String, Boolean> = emptyMap(),
+        val requestQueryParameters: Map<String, Boolean> = emptyMap(),
+        val requestPathParameters: Map<String, Boolean> = emptyMap()
     ) : CreateDataFetcherRequest
 
     data class CreateSimpleDataFetcherRequest(
         val gqlField: String,
         val parameters: Map<String, String> = emptyMap()
-    ): CreateDataFetcherRequest
+    ) : CreateDataFetcherRequest
 
     data class CreateDBDataFetcherRequest(
         val gqlField: String,

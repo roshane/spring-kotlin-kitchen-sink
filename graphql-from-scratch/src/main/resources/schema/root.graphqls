@@ -1,10 +1,19 @@
 type Query{
     echo(name:String): String!
     users: [User]
+    posts: [Post]
 }
 
 type User{
     id:ID!
     name:String
     username:String
+    email: String
+}
+
+type Post{
+    id:ID!
+    userId:String
+    title:String
+    body:String
 }
