@@ -7,6 +7,8 @@ object Http {
 
     fun ServerResponse.BodyBuilder.json() = contentType(MediaType.APPLICATION_JSON)
 
+    fun ServerResponse.BodyBuilder.text() = contentType(MediaType.TEXT_PLAIN)
+
     data class GraphQLRequest(
         val query: String,
         val operationName: String?,

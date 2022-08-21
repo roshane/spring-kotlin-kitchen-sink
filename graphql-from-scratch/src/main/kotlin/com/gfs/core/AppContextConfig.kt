@@ -4,6 +4,7 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.gfs.datafetcher.DelegatedDataFetcher
 import com.gfs.handler.DataFetcherHandler
 import com.gfs.handler.GraphQLHandler
+import com.gfs.handler.GraphQLSchemaHandler
 import com.gfs.repository.DataFetcherRepository
 import org.dataloader.DataLoaderRegistry
 import org.springframework.boot.ApplicationRunner
@@ -35,6 +36,9 @@ object AppContextConfig {
         bean<DataLoaderRegistry>()
         bean<ApplicationRunner> {
             DataLoaderBootstrap(ref(), ref(), ref())
+        }
+        bean{
+            GraphQLSchemaHandler(ref())
         }
     }
 }

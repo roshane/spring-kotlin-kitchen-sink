@@ -2,6 +2,7 @@ package com.gfs.core
 
 import com.gfs.handler.DataFetcherHandler
 import com.gfs.handler.GraphQLHandler
+import com.gfs.handler.GraphQLSchemaHandler
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.io.ClassPathResource
@@ -15,7 +16,8 @@ class RouteConfig {
     @Bean
     fun routes(
         graphqlHandler: GraphQLHandler,
-        dataFetcherHandler: DataFetcherHandler
+        dataFetcherHandler: DataFetcherHandler,
+        schemaHandler: GraphQLSchemaHandler
     ) = router {
         accept(TEXT_HTML).nest {
             GET("/graphiql") { ok().render("index") }
@@ -23,6 +25,7 @@ class RouteConfig {
 
         accept(APPLICATION_JSON).nest {
             POST("/graphql", graphqlHandler::execute)
+            GET("/graphql/schema", schemaHandler::schema)
             POST("/graphql/refresh", graphqlHandler::refresh)
             POST("/graphql/data-fetchers/{type}", dataFetcherHandler::createNew)
             GET("/graphql/data-fetchers", dataFetcherHandler::findAll)

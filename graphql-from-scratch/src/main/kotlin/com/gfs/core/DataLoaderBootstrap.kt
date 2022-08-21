@@ -43,15 +43,15 @@ class DataLoaderBootstrap(
         }
     }
 
-    private val postsByUserDataFetcher = object: ApplicationDataFetcher<GenericListOfObjectType>{
-        override fun metaData(): CreateDataFetcherRequest {
-            TODO("Not yet implemented")
-        }
-
-        override fun get(environment: DataFetchingEnvironment): GenericListOfObjectType {
-            val user = environment.getSource<GenericObjectType>()
-        }
-    }
+//    private val postsByUserDataFetcher = object: ApplicationDataFetcher<GenericListOfObjectType>{
+//        override fun metaData(): CreateDataFetcherRequest {
+//            TODO("Not yet implemented")
+//        }
+//
+//        override fun get(environment: DataFetchingEnvironment): GenericListOfObjectType {
+//            val user = environment.getSource<GenericObjectType>()
+//        }
+//    }
 
     private val postsBatchLoader = MappedBatchLoader<Map<String, Any>, Map<String, Any>> {
         val userIdList = it.map { user -> String::class.safeCast(user["id"]) }.toList()

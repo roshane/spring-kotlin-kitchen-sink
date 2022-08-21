@@ -27,11 +27,12 @@ class GraphQLProvider(
         private val schemaParser = SchemaParser()
         private val schemaGenerator = SchemaGenerator()
         private val graphQLRef: AtomicReference<Optional<GraphQL>> = AtomicReference(Optional.empty())
+        private val notInitializedError = RuntimeException("GraphQL Not Initialized")
     }
 
     override fun execute(input: ExecutionInput): ExecutionResult = graphQLRef.get()
         .map { it.execute(input.query) }
-        .orElseThrow { RuntimeException("GraphQL Not Initialized") }
+        .orElseThrow { notInitializedError }
 
     @PostConstruct
     fun postConstruct() = refresh()
@@ -44,6 +45,10 @@ class GraphQLProvider(
             )
         )
     }
+
+    override fun schema(): GraphQLSchema = graphQLRef.get()
+        .map { it.graphQLSchema }
+        .orElseThrow { notInitializedError }
 
     private fun graphqlSchema(): GraphQLSchema {
         val schema = loadSchema()
