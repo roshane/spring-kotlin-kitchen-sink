@@ -29,7 +29,7 @@ class HandlebarTemplateTest {
     private fun createClassUnderTest(): JsonTemplateUtil = JsonTemplateUtil(objectMapper, hb)
 
     @Test
-    fun `should extract user ids given list of json users`() {
+    fun `handlebars template tests`() {
         val usersJsonString = loadResourceAsString("users.json")
         val jsonList = objectMapper.readValue<List<Any>>(usersJsonString)
         val hbTemplate = """
@@ -111,4 +111,5 @@ class HandlebarTemplateTest {
             .extractValue<List<Map<String, Any>>>(usersJson, List::class.java, extractTemplate)
         assertEquals(expected, result)
     }
+
 }

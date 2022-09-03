@@ -1,9 +1,17 @@
 spring:
+  profiles:
+    default: local
   application:
     name: eureka-server
 
 server:
-  port: 8761
+  port: 8443
+  ssl:
+    key-store: "classpath:ssl/keystore.jks"
+    key-store-password: "password"
+
+app:
+  password-file-path: "/secrets/password.txt"
 
 eureka:
   instance:
