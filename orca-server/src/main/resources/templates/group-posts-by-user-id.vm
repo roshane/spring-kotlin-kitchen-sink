@@ -1,0 +1,5 @@
+#set($posts=$json.parse($data))
+#set($postsByUserId = $json.parse($mics.groupBy($data,"userId")))
+
+$mics.stringify($postsByUserId.get(10).toString())
+

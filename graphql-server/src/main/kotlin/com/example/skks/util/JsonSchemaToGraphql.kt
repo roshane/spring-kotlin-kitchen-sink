@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.node.JsonNodeType
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import graphql.Scalars.*
+import graphql.schema.GraphQLFieldDefinition
 import graphql.schema.GraphQLFieldDefinition.newFieldDefinition
 import graphql.schema.GraphQLList
 import graphql.schema.GraphQLObjectType.newObject
@@ -30,58 +31,64 @@ class JsonSchemaToGraphql {
         val jsonNode = objectMapper.readTree(jsonSchema)
         val properties = jsonNode[PROPERTIES]
         logger.info("Properties: {}", properties)
-        val result = mapToGraphqlType("Entity", properties)
-        result.ifPresent {
-            val schema = schemaPrinter.let { printer -> printer.print(it.graphQLType) }
+        val result = mapJsonPropertyToGraphqlTypeDefinition("User", jsonNode)
+        result.let {
+            val schema = schemaPrinter.let { printer ->
+                printer.print(it.type)
+            }
             logger.info("Final Entity:\n{}", schema)
         }
     }
 
-    private fun mapToGraphqlType(name: String, properties: JsonNode): Optional<JsonToGraphqlType> {
+
+    private fun mapJsonPropertiesToGraphqlFieldDefinitions(properties: JsonNode): List<GraphQLFieldDefinition> {
         val jsonPropertyNames = mutableListOf<String>()
         properties.fieldNames().forEach { jsonPropertyNames.add(it) }
 
         val graphqlTypes = jsonPropertyNames.map { propertyName ->
             val typeNode = properties[propertyName][TYPE]
             val graphqlTypeOptional = when (typeNode.nodeType) {
-                JsonNodeType.STRING -> mapJsonPropertyTypeToGraphQLType(propertyName, properties[propertyName])
-                JsonNodeType.ARRAY -> {
-                    logger.warn("Type Array is under implementation")
-                    Optional.empty()
-                }
+                JsonNodeType.STRING -> Optional.of(
+                    mapJsonPropertyToGraphqlTypeDefinition(
+                        propertyName,
+                        properties[propertyName]
+                    )
+                )
 
-                JsonNodeType.NULL -> Optional.empty()
-                else -> throw RuntimeException("Invalid type on property ${typeNode.toPrettyString()}")
+                JsonNodeType.ARRAY -> Optional.empty()//TODO()
+                JsonNodeType.NULL -> Optional.empty()//TODO()
+                else -> throw RuntimeException("Invalid/Unsupported/Todo type on property ${typeNode.toPrettyString()}")
             }
             graphqlTypeOptional
         }
-        val graphqlType = newObject().name(name).let { newObject ->
-            graphqlTypes
-                .filter { it.isPresent }
-                .map { it.get() }
-                .forEach {
-                    newObject.field(
-                        newFieldDefinition()
-                            .name(it.fieldName)
-                            .type(it.graphQLType)
-                    )
-                }
-            newObject.build()
-        }
-        logger.info("Schema:\n{}", schemaPrinter.print(graphqlType))
-        return Optional.of(JsonToGraphqlType(name, graphqlType))
+        return graphqlTypes
+            .filter { it.isPresent }
+            .map { it.get() }
     }
 
-    private fun mapJsonPropertyTypeToGraphQLType(name: String, property: JsonNode): Optional<JsonToGraphqlType> {
+    private fun mapJsonPropertyToGraphqlTypeDefinition(name: String, property: JsonNode): GraphQLFieldDefinition {
         return when (val jsonType = property[TYPE].asText()) {
             "object" -> {
-                val typeName = name.replaceFirstChar { it.uppercase() }
-                mapToGraphqlType(typeName, property[PROPERTIES]).map { JsonToGraphqlType(name, it.graphQLType) }
+                val result = newFieldDefinition()
+                    .name(name)
+                    .type(
+                        newObject()
+                            .name(name.replaceFirstChar { it.uppercase() })
+                            .fields(mapJsonPropertiesToGraphqlFieldDefinitions(property[PROPERTIES]))
+                            .build()
+                    )
+                    .build()
+                logger.info("Type:\n{}", schemaPrinter.print(result.type))
+                result
             }
 
-            else -> Optional.of(JsonToGraphqlType(name, mapToGraphqlType(jsonType)))
+            else -> newFieldDefinition()
+                .name(name)
+                .type(mapToGraphqlType(jsonType))
+                .build()
         }
     }
+
 
     private fun mapToGraphqlType(jsonType: String): GraphQLOutputType {
         return when (jsonType) {

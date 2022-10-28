@@ -1,0 +1,7 @@
+#set($users = $json.parse($data))
+
+[
+#foreach( $user in $users )
+    $user.id#if($foreach.count  < $users.size()),#end
+#end
+]

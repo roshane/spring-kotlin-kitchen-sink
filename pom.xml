@@ -16,6 +16,7 @@
         <module>dynamic-gql</module>
         <module>config-server</module>
         <module>graphql-from-scratch</module>
+        <module>orca-server</module>
     </modules>
 
     <description>spring kotlin kitchen sink</description>
