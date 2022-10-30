@@ -46,6 +46,18 @@ const groupPostsByUser = (input, context) => {
   return serialize(result);
 };
 
+const __main__ = (_input, _context, callback) => {
+  console.log("Invoked", "__main__ ");
+  try {
+    const input = deserialize(input);
+    const context = deserialize(context);
+    return callback(input, context);
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
 const groupBy = (dataList, key) => {
   const result = {};
   dataList.forEach((data) => {

@@ -12,12 +12,17 @@ data class Context(
     val name: String
 )
 
+data class Script(
+    val memberFunction: String? = null,
+    val src: String? = null,
+    val name: String = "/js/index.js"
+)
+
 data class StepDefinition(
     val id: UUID = UUID.randomUUID(),
     val description: String,
     val isScript: Boolean = false,
-    val scriptName: String? = null,
-    val memberFunction: String? = null,
+    val script: Script = Script(),
     val endpoint: EndpointDefinition? = null,
     val context: Context = Context(name = "result")
 )

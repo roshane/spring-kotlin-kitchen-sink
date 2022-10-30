@@ -1,5 +1,6 @@
 package com.example.skks.orca.core
 
+import com.example.skks.orca.Script
 import com.example.skks.orca.StepDefinition
 import com.fasterxml.jackson.databind.json.JsonMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
@@ -15,8 +16,10 @@ internal class JsStepExecutorTest {
         val step = StepDefinition(
             description = "test",
             isScript = true,
-            memberFunction = "sayHello",
-            scriptName = "/js/index-test.js"
+            script = Script(
+                memberFunction = "sayHello",
+                name = "/js/index-test.js"
+            )
         )
         val (result, _) = createClassUnderTest().execute(step)
         val expected = mapper.writeValueAsString(mapOf("message" to "hello"))
@@ -28,8 +31,10 @@ internal class JsStepExecutorTest {
         val step = StepDefinition(
             description = "test",
             isScript = true,
-            memberFunction = "useInputAndContextArgs",
-            scriptName = "/js/index-test.js"
+            script = Script(
+                memberFunction = "useInputAndContextArgs",
+                name = "/js/index-test.js"
+            )
         )
         val context = mapOf("numbers" to listOf(1, 2, 3))
         val inputArgs = listOf("a", "b")

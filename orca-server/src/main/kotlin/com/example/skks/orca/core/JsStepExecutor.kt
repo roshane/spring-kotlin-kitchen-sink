@@ -43,9 +43,9 @@ class JsStepExecutor(private val mapper: ObjectMapper) : StepExecutor {
         inputArgs: Any,
         context: TGenericObject
     ): String = Context.create("js").let { ctx ->
-        ctx.eval(Source.create("js", readClassPathResourceAsString(stepDefinition.scriptName!!)))
+        ctx.eval(Source.create("js", readClassPathResourceAsString(stepDefinition.script.name)))
         ctx.getBindings("js")
-            .getMember(stepDefinition.memberFunction)
+            .getMember(stepDefinition.script.memberFunction)
             .execute(
                 formatInputArgs(inputArgs),
                 mapper.writeValueAsString(context)

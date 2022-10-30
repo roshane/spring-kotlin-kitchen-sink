@@ -1,6 +1,7 @@
 package com.example.skks.orca.core
 
 import com.example.skks.orca.EndpointDefinition
+import com.example.skks.orca.Script
 import com.example.skks.orca.StepDefinition
 import com.fasterxml.jackson.databind.json.JsonMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
@@ -34,8 +35,10 @@ internal class FlowExecutorIntegrationTest(wmRuntimeInfo: WireMockRuntimeInfo) {
         val step = StepDefinition(
             description = "integration-test",
             isScript = true,
-            scriptName = "/js/index-test.js",
-            memberFunction = "sayHello"
+            script = Script(
+                memberFunction = "sayHello",
+                name = "/js/index-test.js"
+            )
         )
         val result = createClassUnderTest().execute(listOf(step))
         val expected = objectMapper.writeValueAsString(mapOf("message" to "hello"))
@@ -80,8 +83,10 @@ internal class FlowExecutorIntegrationTest(wmRuntimeInfo: WireMockRuntimeInfo) {
         val step02 = StepDefinition(
             description = "integration-test",
             isScript = true,
-            scriptName = "/js/index-test.js",
-            memberFunction = "groupUsersByAge"
+            script = Script(
+                memberFunction = "groupUsersByAge",
+                name = "/js/index-test.js"
+            )
         )
 
         val fakeUsers = listOf(
