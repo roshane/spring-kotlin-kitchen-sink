@@ -1,0 +1,32 @@
+[
+  {
+    "description": "get users",
+    "isScript": false,
+    "endpoint": {
+      "method": "GET",
+      "url": "https://jsonplaceholder.typicode.com/users"
+    },
+    "context": {
+      "storeResultInContext": true,
+      "name": "users"
+    }
+  },
+  {
+    "description": "get posts",
+    "isScript": false,
+    "endpoint": {
+      "method": "GET",
+      "url": "https://jsonplaceholder.typicode.com/posts"
+    },
+    "context": {
+      "storeResultInContext": true,
+      "name": "posts"
+    }
+  },
+  {
+    "description": "script to group posts by user",
+    "isScript": true,
+    "scriptName": "/js/index.js",
+    "memberFunction": "groupPostsByUser"
+  }
+]

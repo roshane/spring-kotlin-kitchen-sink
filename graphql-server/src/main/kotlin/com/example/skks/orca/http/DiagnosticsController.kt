@@ -1,21 +1,13 @@
-package com.example.skks.controller
+package com.example.skks.orca.http
 
-import graphql.schema.FieldCoordinates
-import graphql.schema.GraphQLFieldDefinition
-import graphql.schema.GraphQLObjectType
-import graphql.schema.GraphQLOutputType
 import org.slf4j.LoggerFactory
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Scope
 import org.springframework.graphql.execution.GraphQlSource
 import org.springframework.stereotype.Controller
-import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.ResponseBody
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 

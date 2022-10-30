@@ -1,4 +1,4 @@
-package com.example.skks.config
+package com.example.skks.orca.config
 
 import org.slf4j.LoggerFactory
 import org.springframework.boot.web.client.RestTemplateBuilder

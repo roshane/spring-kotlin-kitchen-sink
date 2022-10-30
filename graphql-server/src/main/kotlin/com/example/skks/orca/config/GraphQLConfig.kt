@@ -1,4 +1,4 @@
-package com.example.skks.config
+package com.example.skks.orca.config
 
 import com.example.skks.HttpModels.Comment
 import com.example.skks.HttpModels.Post
